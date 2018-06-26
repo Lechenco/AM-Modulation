@@ -98,9 +98,9 @@ void MainWindow::setCharts(){
 
 void MainWindow::update(){
    freq_text->setText("Frequência: " + QString::number(frequency->value()) + " Hz");
-   //view.at(2)->chart()->removeSeries(demod_signal);
-   //view.at(2)->chart()->addSeries(demod_signal);
-   //view.at(2)->chart()->createDefaultAxes();
+   view.at(2)->chart()->removeSeries(demod_signal);
+   view.at(2)->chart()->addSeries(demod_signal);
+   view.at(2)->chart()->createDefaultAxes();
 
 }
 
