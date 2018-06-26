@@ -51,8 +51,6 @@ void Functions::dem_am_ac(double t, double ac, double fc){
     int l = phi_AM->count();
     double h = t / l;
 
-    //series->clear();
-    //free(series);
     QLineSeries *aux = this->mod_am_c(phi_AM, t, ac, fc);
 
     //Copy QLineSeries to vector
@@ -67,24 +65,18 @@ void Functions::dem_am_ac(double t, double ac, double fc){
     signal = inv_fourier_trasnform(frequency, l);
 
     //Copy vector to QLineSeries
-   // series->clear();
     for(int i = 0; i < l; i++)
         series->append(i * h, signal[i] / (ac*ac));
 
     free(aux);
     free(signal);
     free(frequency);
-   // return series;
 }
 
 //===Thread work function===
-void Functions::doWork(){
+void Functions::doWork(int fc){
    series->clear();
-   dem_am_ac(5, 10, 50);
-   //int l = 500;
-   //double h = 5.0 / l;
-   //for(int i = 0; i < l; i++)
-    //series->append(i*h, 0.5*cos(2*M_PI*i*h) + 0.5);
+   dem_am_ac(5, 10, fc);
    emit update();
 }
 

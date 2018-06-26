@@ -14,7 +14,6 @@ class MainWindow : public QWidget
 
 public slots:
     void update();
-    void hiden();
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -25,10 +24,10 @@ private:
     Functions *s;
     QSlider *frequency;
     QChart *chart;
-    QLineSeries *orig_signal, *mod_signal, *demod_fequency, *demod_signal;
+    QLineSeries *orig_signal, *mod_signal, *demod_signal;
     QList<QChartView* > view;
     QGridLayout *baseLayout;    //Aplication Layout
-    QPushButton *button;
+    QLabel *freq_text;
 
 };
 

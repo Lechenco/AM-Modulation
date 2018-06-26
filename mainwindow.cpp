@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     orig_signal = s->cos_signal(500, 5, 1, 1);
     mod_signal = s->mod_am_c(orig_signal, 5, 10, 50);
     s->setPhi_AM(mod_signal);
-    s->dem_am_ac(5, 10, 49);
+    s->dem_am_ac(5, 10, 40);
 
 
     //Create Slider
@@ -23,11 +23,11 @@ MainWindow::MainWindow(QWidget *parent)
     frequency->setMaximum(100);
     frequency->setValue(40);
 
-    //Create Button
-    button = new QPushButton();
-    button->setText("Push!");
-    button->setFixedSize(80, 30);
-    baseLayout->addWidget(button, 4, 0);
+    //Create Label
+    freq_text= new QLabel();
+    freq_text->setText("Frequência: " + QString::number(frequency->value()) + " Hz");
+    freq_text->setFixedSize(140, 30);
+    baseLayout->addWidget(freq_text, 4, 0);
 
     this->setCharts();
 
@@ -39,11 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
     worker = new QThread();
     s->moveToThread(worker);
     connect(worker, &QThread::finished, s, &QObject::deleteLater);
-    connect(frequency, &QSlider::valueChanged, s, &Functions::doWork);
+    connect(frequency, SIGNAL (valueChanged(int)), s, SLOT (doWork(int)));
     connect(s, &Functions::update, this, &MainWindow::update);
-
-    connect(button, &QPushButton::clicked, s, &Functions::doWork);
-    connect(button, &QPushButton::clicked, this, &MainWindow::hiden);
 
     worker->start();
 }
@@ -87,6 +84,7 @@ void MainWindow::setCharts(){
     chart = new QChart();
     chart->addSeries(demod_signal);
     chart->createDefaultAxes();
+
     chart->setTheme(QChart::ChartThemeBrownSand);
     chart->legend()->hide();
 
@@ -99,15 +97,10 @@ void MainWindow::setCharts(){
 }
 
 void MainWindow::update(){
-   button->show();
-   view.at(2)->repaint();
-    //demod_signal->clear();
-    //for(int i = 0; i < 400; i++){
-     //    demod_signal->append(i, 0.3);
-   // }
-   //view.at(2)->update();
+   freq_text->setText("Frequência: " + QString::number(frequency->value()) + " Hz");
+   //view.at(2)->chart()->removeSeries(demod_signal);
+   //view.at(2)->chart()->addSeries(demod_signal);
+   //view.at(2)->chart()->createDefaultAxes();
+
 }
 
-void MainWindow::hiden(){
-    button->hide();
-}

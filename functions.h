@@ -20,7 +20,7 @@ signals:
     void update();
 
 public slots:
-    void doWork();
+    void doWork(int fc);
 
 private:
     QLineSeries *series;
