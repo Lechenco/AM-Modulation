@@ -8,9 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Set Signals
     s = new Functions();
-    s->setSeries(demod_signal, mod_signal);
-    orig_signal = s->cos_signal(40000, 5, 1, 1);
+    s->setSeries(demod_signal);
+    orig_signal = s->cos_signal(500, 5, 1, 1);
     mod_signal = s->mod_am_c(orig_signal, 5, 10, 50);
+    s->setPhi_AM(mod_signal);
     s->dem_am_ac(5, 10, 49);
 
 
@@ -35,14 +36,16 @@ MainWindow::MainWindow(QWidget *parent)
     setLayout(baseLayout);
 
     //Threads connection
-    s->moveToThread(&worker);
-    connect(&worker, &QThread::finished, s, &QObject::deleteLater);
-    connect(frequency, SIGNAL (valueChanged(int)), s, SLOT(doWork(int)));
+    worker = new QThread();
+    s->moveToThread(worker);
+    connect(worker, &QThread::finished, s, &QObject::deleteLater);
+    connect(frequency, &QSlider::valueChanged, s, &Functions::doWork);
     connect(s, &Functions::update, this, &MainWindow::update);
 
-    connect(button, SIGNAL (clicked(bool)), this, SLOT (update()));
+    connect(button, &QPushButton::clicked, s, &Functions::doWork);
+    connect(button, &QPushButton::clicked, this, &MainWindow::hiden);
 
-    worker.start();
+    worker->start();
 }
 
 MainWindow::~MainWindow()
@@ -96,9 +99,15 @@ void MainWindow::setCharts(){
 }
 
 void MainWindow::update(){
-   demod_signal->clear();
-    for(int i = 0; i < 400; i++){
-         demod_signal->append(i, 0.3);
-    }
-   view.at(2)->update();
+   button->show();
+   view.at(2)->repaint();
+    //demod_signal->clear();
+    //for(int i = 0; i < 400; i++){
+     //    demod_signal->append(i, 0.3);
+   // }
+   //view.at(2)->update();
+}
+
+void MainWindow::hiden(){
+    button->hide();
 }

@@ -41,14 +41,14 @@ QLineSeries* Functions::mod_am_c(QLineSeries * g, double t, double ac, double fc
     for(int i = 0; i < l; i++)
        phi_AM->append(i*h, g->at(i).y() * c[i]);
 
-    this->phi_AM = phi_AM;
+   // this->phi_AM = phi_AM;
     return phi_AM;
 
 }
 
 //===Amplitute Demodulaion====
 void Functions::dem_am_ac(double t, double ac, double fc){
-    int l = 40000;
+    int l = phi_AM->count();
     double h = t / l;
 
     //series->clear();
@@ -67,7 +67,7 @@ void Functions::dem_am_ac(double t, double ac, double fc){
     signal = inv_fourier_trasnform(frequency, l);
 
     //Copy vector to QLineSeries
-    //series->clear();
+   // series->clear();
     for(int i = 0; i < l; i++)
         series->append(i * h, signal[i] / (ac*ac));
 
@@ -78,16 +78,20 @@ void Functions::dem_am_ac(double t, double ac, double fc){
 }
 
 //===Thread work function===
-void Functions::doWork(int fc){
+void Functions::doWork(){
    series->clear();
-   //dem_am_ac(5, 10, fc);
-   double h = 5 / 40000;
-   for(int i = 0; i < 40000; i++)
-    series->append(i, cos(2*M_PI*5*i*h));
+   dem_am_ac(5, 10, 50);
+   //int l = 500;
+   //double h = 5.0 / l;
+   //for(int i = 0; i < l; i++)
+    //series->append(i*h, 0.5*cos(2*M_PI*i*h) + 0.5);
    emit update();
 }
 
-void Functions::setSeries(QLineSeries *series, QLineSeries *phi_AM){
+void Functions::setSeries(QLineSeries *series){
     this->series = series;
+}
+
+void Functions::setPhi_AM(QLineSeries *phi_AM){
     this->phi_AM = phi_AM;
 }

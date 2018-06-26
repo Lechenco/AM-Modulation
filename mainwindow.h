@@ -10,10 +10,11 @@
 class MainWindow : public QWidget
 {
     Q_OBJECT
-    QThread interface, worker;
+    QThread *worker;
 
 public slots:
     void update();
+    void hiden();
 
 public:
     MainWindow(QWidget *parent = 0);
